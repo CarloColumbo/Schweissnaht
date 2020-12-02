@@ -61,4 +61,3 @@ class MyApp(App):
 #start programm
 if __name__ == '__main__':
     MyApp().run()
-    print("start")
