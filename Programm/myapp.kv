@@ -1,0 +1,677 @@
+#:kivy 1.1.0
+#:import getcwd os.getcwd
+
+
+#Layout for Root-Object
+
+BoxLayout:
+    orientation: "vertical"
+    sm: sm
+    ScreenManager:
+        id: sm
+        #WeldFigure:
+        StartScreen:
+        NewProjectFirstStep:
+        NewProjectSecondStep:
+        WeldFigure:
+        Ascan:
+        Bscan:
+        Cscan:
+        Testscan:
+        My3DScreen:
+            
+<WeldFigure>:
+    name: "WeldFigure"
+    my_canvas: my_canvas
+    first_check: first_check
+    second_check: second_check
+    proportion_label: proportion_label
+    #proportion_text: proportion_label.text
+    BoxLayout:
+        id: properties_field
+        orientation: 'vertical'
+        #proportion_label: proportion_label
+        MyActionBar:
+        View:
+            id: my_canvas
+            auto_bring_to_front: False
+            #height: properties_field.height - 150
+            #width: properties_field.width
+            size_hint_y: 0.85
+            #size_hint_y: None
+            #x: 0
+        Widget:
+            size_hint_y: 0.03
+        BoxLayout:
+            orientation: "horizontal"
+            #size_hint_y: 0.9
+            size_hint_y: 0.1
+            Label:
+                id: proportion_label
+                #text: "Proportion: 1: 10"
+                text: root.proportion_text
+            BoxLayout:
+                orientation: "vertical"
+                MySlider:
+                    id: slider
+                Label:
+                    text: str(int(slider.value))
+            BoxLayout:
+                orientation: "vertical"
+                BoxLayout:
+                    orientation: "horizontal"
+                    Label:
+                        text: "first option"
+                    CheckBox:
+                        id: first_check
+                        active: True
+                BoxLayout:
+                    orientation: "horizontal"
+                    Label:
+                        text: "second option"
+                    CheckBox:
+                        id: second_check
+                        active: True
+            RoundedButton:
+                id: align_button
+                text: "Align"
+                on_release: my_canvas.grid.alignCanvas()
+        Widget:
+            #size_hint_y: 0.05
+            size_hint_y: 0.02
+
+<MyActionBar>:
+    pos_hint: {'top':1}
+    id: bar
+    ActionView:
+        use_separator: True
+        ActionPrevious:
+            title: "Menu"
+            with_previous: False
+        ActionButton:
+            text: 'Weld-figure'
+            on_release: root.changeView('WeldFigure')
+        ActionButton:
+            text: 'A-Scan'
+            on_release: root.changeView('Ascan')
+        ActionButton:
+            text: 'B-Scan'
+            on_release: root.changeView('Bscan')
+        ActionButton:
+            text: 'C-Scan'
+            on_release: root.changeView('Cscan')
+        ActionButton:
+            text: '3D-view'
+            on_release: root.changeView('My3DScreen')
+        ActionGroup:
+            text: 'Tools' 
+            mode: 'spinner'
+            ActionButton:
+                text: 'New'
+                on_release: root.changeView('NewProjectFirstStep')
+            ActionButton:
+                text: 'Open'
+                on_release: root.loadNewProject()
+            ActionButton:
+                text: 'Change config'
+                on_release: root.changeConfig()
+            ActionButton:
+                text: 'Help'
+                on_release: root.openPDF("help")
+            ActionButton:
+                text: 'Seminar work'
+                on_release: root.openPDF("semi")
+    
+<StartScreen>:
+    name: "StartScreen"
+    BoxLayout:
+        orientation: "vertical"
+        Label:
+            size_hint_y: 0.02
+            #height: 20
+        Label:
+            text: "Weld prefing"
+            #text_size: root.width, None
+            font_size: "80dp"
+            size_hint_y: 0.15
+            color: 1,0,1,1
+        Label:
+            size_hint_y: 0.02
+            #height: 5
+        Label:
+            text: "Thank you for using this Programm"
+            size_hint_y: 0.1
+        Label:
+            size_hint_y: 0.02
+            #height: 5
+        Image:
+            #source: "img/Atomkraftwerk.jpg"
+            source: 'img/icon.png'
+            size_hint_y: 0.4
+            #size: 400, 400
+            allow_stretch: True
+        Label:
+            size_hint_y: 0.07
+            #height: 50
+        BoxLayout:
+            size_hint_y: 0.17
+            orientation: "horizontal"
+            Widget:
+            RoundedButton:
+                text: "Create a new project"
+                on_release: root.parent.current = 'NewProjectFirstStep'
+                #on_release: root.parent.current = 'NewProjectSecondStep'
+            Widget:
+            RoundedButton:
+                text: "Open a project"
+                on_release: root.loadProject()
+            Widget:
+        Widget:
+            size_hint_y: 0.05
+
+<NewProjectFirstStep>:
+    name: "NewProjectFirstStep"
+    file_choose_button: file_choose_button
+    save_choose_button: save_choose_button
+    name_input: name_input
+    BoxLayout:
+        orientation: "vertical"
+        Label:
+            text: "Create a new project"
+            font_size: "40dp"
+            size_hint_y: 0.10
+            color: 1,0,1,1
+        Widget:
+            size_hint_y: 0.04
+        BoxLayout:
+            size_hint_y: 0.2
+            orientation: "horizontal"
+            Widget:
+                size_hint_x: 0.18
+            Label:
+                text: "Name of project:"
+                size_hint: (0.3, 1)
+            BigTextInput:
+                size_hint: (0.3, 0.3)
+                pos_hint: {"center_y": 0.5}
+                id: name_input
+            Widget:
+                size_hint_x: 0.22
+        Widget:
+            size_hint_y: 0.04
+        RoundedButton:
+            id: file_choose_button
+            text: 'Select file with data'
+            on_release: root.show_load("select")
+            size_hint: (0.6, 0.15)
+            pos_hint: {'center_x': 0.5}
+        Widget:
+            size_hint_y: 0.04
+        RoundedButton:
+            id: save_choose_button
+            text: 'Select place for saving'
+            on_release: root.show_load("save")
+            size_hint: (0.6, 0.15)
+            pos_hint: {'center_x': 0.5}
+        Widget:
+            size_hint_y: 0.108
+        BoxLayout:
+            size_hint: (0.8, 0.132)
+            pos_hint: {"center_x": 0.5}
+            orientation: "horizontal"
+            RoundedButton:
+                text: "Back"
+                size_hint_x: 0.4
+                on_release: root.parent.current = 'StartScreen'
+            Widget:
+                size_hint_x: 0.2
+            RoundedButton:
+                text: "Next"
+                size_hint_x: 0.4
+                on_release: root.nextStep()
+        Widget:
+            size_hint_y: 0.04
+
+<NewProjectSecondStep>:
+    name: "NewProjectSecondStep"
+    scans_per_run: scans_per_run
+    BoxLayout:
+        orientation: "vertical"
+        Label:
+            text: "Create a new project"
+            font_size: "40dp"
+            size_hint_y: 0.10
+            color: 1,0,1,1
+        Widget:
+            size_hint_y: 0.05
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: 0.132
+            MyLabel:
+                text: 'Angle of welt in degrees: '
+                size_hint_x: 0.5
+            MyTextInput:
+                id: angle_weld
+                text: "10"
+                focus: True
+                on_text: root.checkAngleValue(self)
+                size_hint: (0.3, 0.5)
+                pos_hint: {"center_y": 0.5}
+                font_size: self.height - 15
+            Widget:
+                size_hint_x: 0.2
+        Widget:
+            size_hint_y: 0.05
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: 0.132
+            MyLabel:
+                text: 'Height of object in mm: '
+                size_hint_x: 0.5
+            MyTextInput:
+                id: height_object
+                text: "5.5"
+                size_hint: (0.3, 0.5)
+                pos_hint: {"center_y": 0.5}
+                font_size: self.height - 15
+            Widget:
+                size_hint_x: 0.2
+        Widget:
+            size_hint_y: 0.05
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: 0.132
+            MyLabel:
+                text: 'Scan interval in mm: '
+                size_hint_x: 0.5
+            MyTextInput:
+                id: scan_interval
+                text: "0.5"
+                size_hint: (0.3, 0.5)
+                pos_hint: {"center_y": 0.5}
+                font_size: self.height - 15
+            Widget:
+                size_hint_x: 0.2
+        Widget:
+            size_hint_y: 0.05
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: 0.132
+            MyLabel:
+                text: 'Scans per run: '
+                size_hint_x: 0.5
+            MyTextInput:
+                id: scans_per_run
+                text: "160"
+                size_hint: (0.3, 0.5)
+                pos_hint: {"center_y": 0.5}
+                font_size: self.height - 15
+            Widget:
+                size_hint_x: 0.2
+        Widget:
+            size_hint_y: 0.05
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: 0.132
+            MyLabel:
+                text: 'distance of forerun: '
+                size_hint_x: 0.5
+            MyTextInput:
+                id: distance
+                text: "0"
+                size_hint: (0.3, 0.5)
+                pos_hint: {"center_y": 0.5}
+                font_size: self.height - 15
+            Widget:
+                size_hint_x: 0.2
+        Widget:
+            size_hint_y: 0.05
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint: (0.8, 0.132)
+            pos_hint: {"center_x": 0.5}
+            RoundedButton:
+                text: "Back"
+                size_hint_x: 0.4
+                on_release: root.parent.current = "NewProjectFirstStep"
+            Widget:
+                size_hint_x: 0.2
+            RoundedButton:
+                text: "Complete"
+                size_hint_x: 0.4
+                on_release: root.doit_in_thread()
+        Widget:
+            size_hint_y: 0.04
+
+
+#https://groups.google.com/forum/#!topic/kivy-users/gyS2EqOk_Mw
+<View@RelativeLayout>:
+    grid: grid
+    StencilView:
+        CustomScatter:
+            auto_bring_to_front: False
+            do_rotation: False
+            #size: (1500, 800)
+            size: root.size
+            pos: (0, 0)
+            Grid:
+                id: grid
+
+<MyTextInput@TextInput>:
+    input_type: 'number'
+    input_filter: 'float'
+    multiline: False
+    #on_text_validate: app.root.startCalc()
+    write_tab: False
+
+<MyLabel@Label>
+
+<LoadDialog>:
+    BoxLayout:
+        size: root.size
+        orientation: "vertical"
+        pos: root.pos 
+        FileChooserIconView:
+            id: filechooser
+            path: getcwd()
+            #path: "C:\Users\KaMaSchüüüüüüüüü\Desktop\Semi"
+            filters: [lambda folder, filename: not filename.endswith('')]
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: "Cancel"
+                on_release: root.cancel()
+                #on_release: print(getcwd())
+            Button:
+                text: "Load"
+                on_release: root.load(filechooser.path, filechooser.selection)
+
+<ChangeConfig>:
+    config_box: config_box
+    BoxLayout:
+        size: root.size
+        orientation: "vertical"
+        pos: root.pos
+        BoxLayout:
+            orientation: "vertical"
+            id: config_box
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: "Cancel"
+                on_release: root.cancel()
+            Button:
+                text: "Load"
+                on_release: root.load()
+
+<NewTextInput@TextInput>:
+    font_size: self.height - 15
+    multiline: False
+    pos_hint: {"center_y": 0.5}
+    size_hint_y: 0.5
+    write_tab:False
+                
+<Progress>:
+    #title: "Progress"
+    progress: progress
+    progress_text: progress_text
+    BoxLayout:
+        orientation: "vertical"
+        ProgressBar:
+            id: progress
+        Label:
+            id: progress_text
+            text: "Test"
+
+
+<Ascan>:
+    name: 'Ascan'
+    pos_x: pos_x
+    pos_y: pos_y
+    my_box: my_box
+    #my_graph: my_graph
+    BoxLayout:
+        orientation: "vertical"
+        MyActionBar:
+        BoxLayout:
+            orientation: "vertical"
+            id: my_box
+            size_hint_y: 0.85
+        Widget:
+            size_hint_y: 0.03
+        BoxLayout:
+            orientation: "horizontal"
+            #size_hint_max_y: 100
+            #size_hint: (None, None)
+            size_hint_y: 0.10
+            height: root.size[1] * 0.15
+            width: root.size[0]
+            Widget:
+                size_hint_x: 0.04
+            BoxLayout:
+                orientation: "horizontal"
+                size_hint_x: 0.3
+                Label:
+                    text: "x:"
+                MyTextInput:
+                    id: pos_x
+                    input_filter: 'int'
+                    on_text_validate: root.inputNumberOfPosition()
+                    text: "0"
+                    focus: True
+                    size_hint_y: 0.5
+                    pos_hint: {"center_y": 0.5}
+                    font_size: self.height - 15
+                Label:
+                    text: "y:"
+                MyTextInput:
+                    id: pos_y
+                    input_filter: 'int'
+                    on_text_validate: root.inputNumberOfPosition()
+                    text: "0"
+                    size_hint_y: 0.5
+                    pos_hint: {"center_y": 0.5}
+                    font_size: self.height - 15
+            Widget:
+                size_hint_x: 0.2
+            RoundedButton:
+                size_hint_x: 0.2
+                text: "Show next file"
+                on_release: root.nextPosition()
+            Widget:
+                size_hint_x: 0.02
+            RoundedButton:
+                size_hint_x: 0.2
+                text: "Show previous file"
+                on_release: root.previousPosition()
+            Widget:
+                size_hint_x: 0.04
+        Widget:
+            size_hint_y: 0.02
+        
+
+
+<Bscan>:
+    name: 'Bscan'
+    my_box: my_box
+    BoxLayout:
+        orientation: "vertical"
+        MyActionBar:
+        BoxLayout:
+            orientation: "vertical"
+            id: my_box
+            size_hint_y: 0.85
+        Widget:
+            size_hint_y: 0.03
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: 0.1
+            height: root.size[1] * 0.15
+            width: root.size[0]
+            Label:
+                text: "line number"
+                size_hint_x: 0.2
+            MySlider:
+                id: slider
+                min: 0
+                step: 1
+                #on_value: root.changeLine(self.value)      
+                #on_touch_up: root.changeLine(self.value) 
+                size_hint_x: 0.2  
+            Label:
+                text: str(int(slider.value))
+                size_hint_x: 0.1
+            Widget:
+                size_hint_x: 0.06
+            RoundedButton:
+                text: "Pop 2D Plot"
+                on_press: root.popPlot("2D")
+                size_hint_x: 0.2
+            Widget:
+                size_hint_x: 0.02
+            RoundedButton:
+                text: "Pop 3D Plot"
+                on_press: root.popPlot("3D")
+                size_hint_x: 0.2
+            Widget:
+                size_hint_x: 0.02
+        Widget:
+            size_hint_y: 0.02
+
+<Bscan2>:
+    name: 'Bscan2'
+    my_box: my_box
+    BoxLayout:
+        orientation: "vertical"
+        MyActionBar:
+        BoxLayout:
+            orientation: "vertical"
+            id: my_box
+            size_hint_y: 0.85
+        Widget:
+            size_hint_y: 0.03
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: 0.1
+            height: root.size[1] * 0.15
+            width: root.size[0]
+            Label:
+                text: "line number"
+                size_hint_x: 0.2
+            MySlider:
+                id: slider
+                min: 0
+                step: 1
+                #on_value: root.changeLine(self.value)      
+                #on_touch_up: root.changeLine(self.value) 
+                size_hint_x: 0.2  
+            Label:
+                text: str(int(slider.value))
+                size_hint_x: 0.1
+            Widget:
+                size_hint_x: 0.06
+            RoundedButton:
+                text: "Pop 2D Plot"
+                on_press: root.popPlot("2D")
+                size_hint_x: 0.2
+            Widget:
+                size_hint_x: 0.02
+            RoundedButton:
+                text: "Pop 3D Plot"
+                on_press: root.popPlot("3D")
+                size_hint_x: 0.2
+            Widget:
+                size_hint_x: 0.02
+        Widget:
+            size_hint_y: 0.02
+
+<Cscan>:
+    name: 'Cscan'
+    my_box: my_box
+    BoxLayout:
+        orientation: "vertical"
+        MyActionBar:
+        BoxLayout:
+            orientation: "vertical"
+            id: my_box
+            size_hint_y: 0.85
+        Widget:
+            size_hint_y: 0.03
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: 0.1
+            height: root.size[1] * 0.15
+            width: root.size[0]
+            Label:
+                text: "line number"
+                size_hint_x: 0.2
+            MySlider:
+                id: slider
+                min: 0
+                step: 1
+                #on_value: root.changeLine(self.value)      
+                #on_touch_up: root.changeLine(self.value) 
+                size_hint_x: 0.2  
+            Label:
+                text: str(int(slider.value))
+                size_hint_x: 0.1
+            Widget:
+                size_hint_x: 0.06
+            RoundedButton:
+                text: "Pop Plot"
+                on_press: root.popPlot()
+                size_hint_x: 0.2
+            Widget:
+                size_hint_x: 0.02
+        Widget:
+            size_hint_y: 0.02
+
+<Testscan>:
+    name: 'Testscan'
+    my_box: my_box
+    BoxLayout:
+        orientation: "vertical"
+        MyActionBar:
+        BoxLayout:
+            orientation: "horizontal"
+            #size_hint_max_y: 100
+            size_hint: (None, None)
+            height: root.size[1] * 0.15
+            width: root.size[0]
+            MySlider:
+                id: slider
+                min: 0
+                step: 1  
+            Label:
+                text: str(int(slider.value))
+            Button:
+                text: "Pop Plot"
+                on_press: root.popPlot()
+        BoxLayout:
+            orientation: "vertical"
+            id: my_box
+
+<My3DScreen>:
+    name: "My3DScreen"
+    layout: layout
+    BoxLayout:
+        orientation: "vertical"
+        MyActionBar:
+        FloatLayout:
+            id: layout
+
+#https://stackoverflow.com/questions/19005182/rounding-button-corners-in-kivy
+<RoundedButton@Button>:
+    background_color: 0,0,0,0  # the last zero is the critical on, make invisible
+    canvas.before:
+        Color:
+            rgba: (.4,.4,.4,1) if self.state=='normal' else (0,.7,.7,1)  # visual feedback of press
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [50,]
+
+<BigTextInput@TextInput>:
+    font_size: self.height - 15
