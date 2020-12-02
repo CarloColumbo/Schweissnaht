@@ -1,0 +1,7 @@
+maxy&50.0
+ybounds&1024.0
+distance&0.0
+scans&150.0
+interval&0.05
+height&4.0
+angle&45.0
