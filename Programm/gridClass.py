@@ -13,6 +13,9 @@ proportion_text = StringProperty("Proportion: ")
 
 first_check = ObjectProperty(None)
 second_check = ObjectProperty(None)
+third_check = ObjectProperty(None)
+
+percentage = ObjectProperty(None)
 
 #Object in which the Canvas will be drawed
 class Grid(Widget):
@@ -134,14 +137,21 @@ class Grid(Widget):
         self.draw_grid()
         y = int(obj.value)
         increase = self.height_of_welt / Global.config["height"]
-        polygons = calculationClass.find_mistakes_along_x_axis(y, self.middle / increase, first_check.active, second_check.active)
+        polygons = calculationClass.find_mistakes_along_x_axis(
+            y, 
+            self.middle / increase, 
+            first_check.active, 
+            second_check.active,
+            third_check.active,
+            float(percentage.text)
+        )
 
         self.circles = []
         for e in polygons:
            self.drawCircle(e)
         #    break
         #self.drawCircle(polygons[2])
-        print(self.circles)
+        #print(self.circles)
         #self.drawPolygone()
         pass
 
@@ -181,13 +191,30 @@ class WeldFigure(Screen):
             Clock.schedule_once(self.after__init__)
 
     def after__init__(self, clock):
-        global first_check, second_check
+        global first_check, second_check, third_check, percentage
         first_check = self.first_check
         second_check = self.second_check
+        third_check = self.third_check
+        #percentage = self.percentage_slider
+        percentage = self.input
 
         self.ids.my_canvas.ids.grid.configCanvas()
         self.ids.slider.max = Global.config['maxy'] - 1 #?maxx
         self.ids.slider.bind(on_release=self.ids.my_canvas.ids.grid.drawMistakes)
+
+        #self.percentage_slider.max = 500
+        #self.percentage_slider.min = 0
+        
+        self.first_check.bind(active=self.on_active_checkbox_other)
+        self.second_check.bind(active=self.on_active_checkbox_other)
+        self.third_check.bind(active=self.on_active_checkbox)
         self.ids.my_canvas.ids.grid.drawMistakes(self.ids.slider)
 
-        #self.proportion_text = "test"
+    def on_active_checkbox(self, checkbox, value):
+        if value:
+            self.first_check.active = False
+            self.second_check.active = False
+
+    def on_active_checkbox_other(self, checkbox, value):
+        if value:
+            self.third_check.active = False

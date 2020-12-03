@@ -56,7 +56,7 @@ def calculate_normal_time(x, y, angle, height):
 
     return time
 
-def find_mistakes_along_x_axis(y, length_of_picture=None, first=True, second=True):
+def find_mistakes_along_x_axis(y, length_of_picture=None, first=True, second=True, third=False, perc=100):
 
     height = Global.config["height"]
     angle_dec = Global.config["angle"]
@@ -93,6 +93,8 @@ def find_mistakes_along_x_axis(y, length_of_picture=None, first=True, second=Tru
     area = 40
     area2 = 80
 
+    #perc = perc/1000
+
     mind_time2 = mind_time*2
 
     #-----------------Algorithmus-------------------#
@@ -101,6 +103,16 @@ def find_mistakes_along_x_axis(y, length_of_picture=None, first=True, second=Tru
         test_time = calculate_normal_time(x, y, angle, height_real)
         #print("border", test_time / sample)
         border = (test_time / sample)
+
+        #border1 = border + area
+        #border2 = border + area2
+
+        #perc = 1 - perc
+
+        border1 = border * (perc)
+        border2 = border * (2 - perc)
+
+        print(border, border1, border2)
 
         for i in range(mind_time, int(Global.config["ybounds"])):
         #for i in range(int(test_time/sample)-20, int(test_time/sample)+20):
@@ -118,8 +130,9 @@ def find_mistakes_along_x_axis(y, length_of_picture=None, first=True, second=Tru
             second_way = second_dist * np.cos(angle)
 
 
-            if first and i < border - area2:
-                #continue
+            if (first or third) and i < border1:
+                if third:
+                    continue
                 #!Anwendung des Sinussatz
                 #print("here", x)
                 rest_time = (i - mind_time) * sample
@@ -155,8 +168,9 @@ def find_mistakes_along_x_axis(y, length_of_picture=None, first=True, second=Tru
                 way = best_b * 1000 + rad
                 #print(best_b, best, best_omega)
 
-            elif second and i > border + area:
-                #continue
+            elif (second or third) and i > border2:
+                if third:
+                    continue
 
                 rest_time = (i - mind_time) * sample
                 rest_way = calculate_way(rest_time)

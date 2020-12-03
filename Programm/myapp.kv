@@ -25,6 +25,8 @@ BoxLayout:
     my_canvas: my_canvas
     first_check: first_check
     second_check: second_check
+    third_check: third_check
+    input: input
     proportion_label: proportion_label
     #proportion_text: proportion_label.text
     BoxLayout:
@@ -46,10 +48,21 @@ BoxLayout:
             orientation: "horizontal"
             #size_hint_y: 0.9
             size_hint_y: 0.1
-            Label:
-                id: proportion_label
-                #text: "Proportion: 1: 10"
-                text: root.proportion_text
+            BoxLayout:
+                orientation: "vertical"
+                Label:
+                    id: proportion_label
+                    #text: "Proportion: 1: 10"
+                    text: root.proportion_text
+                BoxLayout:
+                    orientation: "horizontal"
+                    Label:
+                        text: "Area"
+                    MyTextInput:
+                        id: input
+                        text: "0.95"
+                #MySlider:
+                    #id: percentage_slider
             BoxLayout:
                 orientation: "vertical"
                 MySlider:
@@ -72,6 +85,13 @@ BoxLayout:
                     CheckBox:
                         id: second_check
                         active: True
+                BoxLayout:
+                    orientation: "horizontal"
+                    Label:
+                        text: "hide problem areas"
+                    CheckBox:
+                        id: third_check
+                        active: False
             RoundedButton:
                 id: align_button
                 text: "Align"
